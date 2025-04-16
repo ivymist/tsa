@@ -1,0 +1,21 @@
+from pandas import read_csv
+from matplotlib import pyplot
+from pandas import DataFrame
+from pandas import Grouper
+from pandas.plotting import lag_plot
+%matplotlib inline
+from statsmodels.tsa.filters.hp_filter import hpfilter
+import warnings
+warnings.filterwarnings("ignore")
+from scipy import signal
+from statsmodels.tsa.filters.hp_filter import hpfilter
+from pandas.plotting import autocorrelation_plot
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.stattools import kpss
+from statsmodels.graphics.tsaplots import plot_pacf
+from pmdarima import auto_arima
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.metrics import mean_squared_error
+from statsmodels.tsa.ar_model import AutoReg
+from pandas import concat

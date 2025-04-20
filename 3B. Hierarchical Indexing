@@ -1,0 +1,1842 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "091f4e95",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(California, 2000)    33871648\n",
+       "(California, 2010)    37253956\n",
+       "(New York, 2000)      18976457\n",
+       "(New York, 2010)      19378102\n",
+       "(Texas, 2000)         20851820\n",
+       "(Texas, 2010)         25145561\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#A Multiply Indexed Series\n",
+    "\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "index = [('California', 2000), ('California', 2010),\n",
+    "('New York', 2000), ('New York', 2010),\n",
+    "('Texas', 2000), ('Texas', 2010)]\n",
+    "populations = [33871648, 37253956,\n",
+    "18976457, 19378102,\n",
+    "20851820, 25145561]\n",
+    "pop = pd.Series(populations, index=index)\n",
+    "pop"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "20998652",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(California, 2000)    33871648\n",
+       "(California, 2010)    37253956\n",
+       "(New York, 2000)      18976457\n",
+       "(New York, 2010)      19378102\n",
+       "(Texas, 2000)         20851820\n",
+       "(Texas, 2010)         25145561\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pop = pop.reindex(index)\n",
+    "pop"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "c8848aea",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "IndexingError",
+     "evalue": "Too many indexers",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mIndexingError\u001b[0m                             Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[11], line 1\u001b[0m\n\u001b[1;32m----> 1\u001b[0m \u001b[43mpop\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mloc\u001b[49m\u001b[43m[\u001b[49m\u001b[43m:\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;241;43m2010\u001b[39;49m\u001b[43m]\u001b[49m\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\core\\indexing.py:1097\u001b[0m, in \u001b[0;36m_LocationIndexer.__getitem__\u001b[1;34m(self, key)\u001b[0m\n\u001b[0;32m   1095\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_is_scalar_access(key):\n\u001b[0;32m   1096\u001b[0m         \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mobj\u001b[38;5;241m.\u001b[39m_get_value(\u001b[38;5;241m*\u001b[39mkey, takeable\u001b[38;5;241m=\u001b[39m\u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_takeable)\n\u001b[1;32m-> 1097\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_getitem_tuple\u001b[49m\u001b[43m(\u001b[49m\u001b[43mkey\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m   1098\u001b[0m \u001b[38;5;28;01melse\u001b[39;00m:\n\u001b[0;32m   1099\u001b[0m     \u001b[38;5;66;03m# we by definition only have the 0th axis\u001b[39;00m\n\u001b[0;32m   1100\u001b[0m     axis \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39maxis \u001b[38;5;129;01mor\u001b[39;00m \u001b[38;5;241m0\u001b[39m\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\core\\indexing.py:1283\u001b[0m, in \u001b[0;36m_LocIndexer._getitem_tuple\u001b[1;34m(self, tup)\u001b[0m\n\u001b[0;32m   1280\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_getitem_lowerdim(tup)\n\u001b[0;32m   1282\u001b[0m \u001b[38;5;66;03m# no multi-index, so validate all of the indexers\u001b[39;00m\n\u001b[1;32m-> 1283\u001b[0m tup \u001b[38;5;241m=\u001b[39m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_validate_tuple_indexer\u001b[49m\u001b[43m(\u001b[49m\u001b[43mtup\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m   1285\u001b[0m \u001b[38;5;66;03m# ugly hack for GH #836\u001b[39;00m\n\u001b[0;32m   1286\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_multi_take_opportunity(tup):\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\core\\indexing.py:900\u001b[0m, in \u001b[0;36m_LocationIndexer._validate_tuple_indexer\u001b[1;34m(self, key)\u001b[0m\n\u001b[0;32m    895\u001b[0m \u001b[38;5;129m@final\u001b[39m\n\u001b[0;32m    896\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21m_validate_tuple_indexer\u001b[39m(\u001b[38;5;28mself\u001b[39m, key: \u001b[38;5;28mtuple\u001b[39m) \u001b[38;5;241m-\u001b[39m\u001b[38;5;241m>\u001b[39m \u001b[38;5;28mtuple\u001b[39m:\n\u001b[0;32m    897\u001b[0m \u001b[38;5;250m    \u001b[39m\u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[0;32m    898\u001b[0m \u001b[38;5;124;03m    Check the key for valid keys across my indexer.\u001b[39;00m\n\u001b[0;32m    899\u001b[0m \u001b[38;5;124;03m    \"\"\"\u001b[39;00m\n\u001b[1;32m--> 900\u001b[0m     key \u001b[38;5;241m=\u001b[39m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_validate_key_length\u001b[49m\u001b[43m(\u001b[49m\u001b[43mkey\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m    901\u001b[0m     key \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_expand_ellipsis(key)\n\u001b[0;32m    902\u001b[0m     \u001b[38;5;28;01mfor\u001b[39;00m i, k \u001b[38;5;129;01min\u001b[39;00m \u001b[38;5;28menumerate\u001b[39m(key):\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\core\\indexing.py:939\u001b[0m, in \u001b[0;36m_LocationIndexer._validate_key_length\u001b[1;34m(self, key)\u001b[0m\n\u001b[0;32m    937\u001b[0m             \u001b[38;5;28;01mraise\u001b[39;00m IndexingError(_one_ellipsis_message)\n\u001b[0;32m    938\u001b[0m         \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_validate_key_length(key)\n\u001b[1;32m--> 939\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m IndexingError(\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mToo many indexers\u001b[39m\u001b[38;5;124m\"\u001b[39m)\n\u001b[0;32m    940\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m key\n",
+      "\u001b[1;31mIndexingError\u001b[0m: Too many indexers"
+     ]
+    }
+   ],
+   "source": [
+    "pop.loc[:, 2010]\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "145f1200",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ValueError",
+     "evalue": "index must be a MultiIndex to unstack, <class 'pandas.core.indexes.base.Index'> was passed",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mValueError\u001b[0m                                Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[12], line 3\u001b[0m\n\u001b[0;32m      1\u001b[0m \u001b[38;5;66;03m#MultiIndex as extra dimension\u001b[39;00m\n\u001b[1;32m----> 3\u001b[0m pop_df \u001b[38;5;241m=\u001b[39m \u001b[43mpop\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43munstack\u001b[49m\u001b[43m(\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m      4\u001b[0m pop_df\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\core\\series.py:4313\u001b[0m, in \u001b[0;36mSeries.unstack\u001b[1;34m(self, level, fill_value)\u001b[0m\n\u001b[0;32m   4270\u001b[0m \u001b[38;5;250m\u001b[39m\u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[0;32m   4271\u001b[0m \u001b[38;5;124;03mUnstack, also known as pivot, Series with MultiIndex to produce DataFrame.\u001b[39;00m\n\u001b[0;32m   4272\u001b[0m \n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m   4309\u001b[0m \u001b[38;5;124;03mb    2    4\u001b[39;00m\n\u001b[0;32m   4310\u001b[0m \u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[0;32m   4311\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mpandas\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mcore\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mreshape\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mreshape\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m unstack\n\u001b[1;32m-> 4313\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[43munstack\u001b[49m\u001b[43m(\u001b[49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mlevel\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mfill_value\u001b[49m\u001b[43m)\u001b[49m\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\core\\reshape\\reshape.py:482\u001b[0m, in \u001b[0;36munstack\u001b[1;34m(obj, level, fill_value)\u001b[0m\n\u001b[0;32m    477\u001b[0m         \u001b[38;5;28;01mreturn\u001b[39;00m obj\u001b[38;5;241m.\u001b[39mT\u001b[38;5;241m.\u001b[39mstack(dropna\u001b[38;5;241m=\u001b[39m\u001b[38;5;28;01mFalse\u001b[39;00m)\n\u001b[0;32m    478\u001b[0m \u001b[38;5;28;01melif\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(obj\u001b[38;5;241m.\u001b[39mindex, MultiIndex):\n\u001b[0;32m    479\u001b[0m     \u001b[38;5;66;03m# GH 36113\u001b[39;00m\n\u001b[0;32m    480\u001b[0m     \u001b[38;5;66;03m# Give nicer error messages when unstack a Series whose\u001b[39;00m\n\u001b[0;32m    481\u001b[0m     \u001b[38;5;66;03m# Index is not a MultiIndex.\u001b[39;00m\n\u001b[1;32m--> 482\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mValueError\u001b[39;00m(\n\u001b[0;32m    483\u001b[0m         \u001b[38;5;124mf\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mindex must be a MultiIndex to unstack, \u001b[39m\u001b[38;5;132;01m{\u001b[39;00m\u001b[38;5;28mtype\u001b[39m(obj\u001b[38;5;241m.\u001b[39mindex)\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;124m was passed\u001b[39m\u001b[38;5;124m\"\u001b[39m\n\u001b[0;32m    484\u001b[0m     )\n\u001b[0;32m    485\u001b[0m \u001b[38;5;28;01melse\u001b[39;00m:\n\u001b[0;32m    486\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m is_1d_only_ea_dtype(obj\u001b[38;5;241m.\u001b[39mdtype):\n",
+      "\u001b[1;31mValueError\u001b[0m: index must be a MultiIndex to unstack, <class 'pandas.core.indexes.base.Index'> was passed"
+     ]
+    }
+   ],
+   "source": [
+    "#MultiIndex as extra dimension\n",
+    "\n",
+    "pop_df = pop.unstack()\n",
+    "pop_df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "183c52e3",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'pop_df' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[13], line 1\u001b[0m\n\u001b[1;32m----> 1\u001b[0m \u001b[43mpop_df\u001b[49m\u001b[38;5;241m.\u001b[39mstack()\n",
+      "\u001b[1;31mNameError\u001b[0m: name 'pop_df' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "pop_df.stack()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "41de4e0f",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Index([('California', 2000), ('California', 2010),   ('New York', 2000),\n",
+      "         ('New York', 2010),      ('Texas', 2000),      ('Texas', 2010)],\n",
+      "      dtype='object')\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(pop.index)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "1ad44c99",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th>data1</th>\n",
+       "      <th>data2</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">a</th>\n",
+       "      <th>1</th>\n",
+       "      <td>0.238889</td>\n",
+       "      <td>0.690578</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>0.962239</td>\n",
+       "      <td>0.897577</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">b</th>\n",
+       "      <th>1</th>\n",
+       "      <td>0.200338</td>\n",
+       "      <td>0.891894</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>0.956167</td>\n",
+       "      <td>0.569446</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        data1     data2\n",
+       "a 1  0.238889  0.690578\n",
+       "  2  0.962239  0.897577\n",
+       "b 1  0.200338  0.891894\n",
+       "  2  0.956167  0.569446"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Methods of multiindecxing creation\n",
+    "\n",
+    "df = pd.DataFrame(np.random.rand(4, 2),\n",
+    "index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]],\n",
+    "columns=['data1', 'data2'])\n",
+    "df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "61ed269d",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "California  2000    33871648\n",
+       "            2010    37253956\n",
+       "Texas       2000    20851820\n",
+       "            2010    25145561\n",
+       "New York    2000    18976457\n",
+       "            2010    19378102\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    " data = {('California', 2000): 33871648,\n",
+    "('California', 2010): 37253956,\n",
+    "('Texas', 2000): 20851820,\n",
+    "('Texas', 2010): 25145561,\n",
+    "('New York', 2000): 18976457,\n",
+    "('New York', 2010): 19378102}\n",
+    "pd.Series(data)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "917b5127",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MultiIndex([('a', 1),\n",
+       "            ('a', 2),\n",
+       "            ('b', 1),\n",
+       "            ('b', 2)],\n",
+       "           )"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Explicit MultiIndex constructors\n",
+    "\n",
+    "pd.MultiIndex.from_arrays([['a', 'a', 'b', 'b'], [1, 2, 1, 2]])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "80c296c4",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MultiIndex([('a', 1),\n",
+       "            ('a', 2),\n",
+       "            ('b', 1),\n",
+       "            ('b', 2)],\n",
+       "           )"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pd.MultiIndex.from_tuples([('a', 1), ('a', 2), ('b', 1), ('b', 2)])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "256c86c6",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MultiIndex([('a', 1),\n",
+       "            ('a', 2),\n",
+       "            ('b', 1),\n",
+       "            ('b', 2)],\n",
+       "           )"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    " pd.MultiIndex.from_product([['a', 'b'], [1, 2]])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "ad3abdd2",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "MultiIndex([('a', 1),\n",
+      "            ('a', 2),\n",
+      "            ('b', 1),\n",
+      "            ('b', 2)],\n",
+      "           )\n"
+     ]
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "# Correct way to create a MultiIndex with levels and codes\n",
+    "multi_index = pd.MultiIndex(levels=[['a', 'b'], [1, 2]], \n",
+    "                            codes=[[0, 0, 1, 1], [0, 1, 0, 1]])\n",
+    "\n",
+    "print(multi_index)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "66338fdd",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "state       year\n",
+      "California  2000    33871648\n",
+      "            2010    37253956\n",
+      "New York    2000    18976457\n",
+      "            2010    19378102\n",
+      "Texas       2000    20851820\n",
+      "            2010    25145561\n",
+      "dtype: int64\n"
+     ]
+    }
+   ],
+   "source": [
+    "pop.index = pd.MultiIndex.from_tuples(pop.index, names=['state', 'year'])\n",
+    "print(pop)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "f99b03a5",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "state       year\n",
+      "California  2000    33871648\n",
+      "            2010    37253956\n",
+      "New York    2000    18976457\n",
+      "            2010    19378102\n",
+      "Texas       2000    20851820\n",
+      "            2010    25145561\n",
+      "dtype: int64\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Assuming 'pop' has a MultiIndex\n",
+    "pop.index.names = ['state', 'year']\n",
+    "print(pop)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "53eaaf49",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr th {\n",
+       "        text-align: left;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr:last-of-type th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>subject</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Bob</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Guido</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Sue</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>type</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>year</th>\n",
+       "      <th>visit</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">2013</th>\n",
+       "      <th>1</th>\n",
+       "      <td>39.0</td>\n",
+       "      <td>36.6</td>\n",
+       "      <td>53.0</td>\n",
+       "      <td>38.3</td>\n",
+       "      <td>52.0</td>\n",
+       "      <td>37.8</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>37.0</td>\n",
+       "      <td>38.8</td>\n",
+       "      <td>33.0</td>\n",
+       "      <td>36.1</td>\n",
+       "      <td>43.0</td>\n",
+       "      <td>36.6</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">2014</th>\n",
+       "      <th>1</th>\n",
+       "      <td>42.0</td>\n",
+       "      <td>36.8</td>\n",
+       "      <td>34.0</td>\n",
+       "      <td>37.3</td>\n",
+       "      <td>56.0</td>\n",
+       "      <td>37.1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>31.0</td>\n",
+       "      <td>37.0</td>\n",
+       "      <td>36.0</td>\n",
+       "      <td>36.3</td>\n",
+       "      <td>44.0</td>\n",
+       "      <td>36.1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "subject      Bob       Guido         Sue      \n",
+       "type          HR  Temp    HR  Temp    HR  Temp\n",
+       "year visit                                    \n",
+       "2013 1      39.0  36.6  53.0  38.3  52.0  37.8\n",
+       "     2      37.0  38.8  33.0  36.1  43.0  36.6\n",
+       "2014 1      42.0  36.8  34.0  37.3  56.0  37.1\n",
+       "     2      31.0  37.0  36.0  36.3  44.0  36.1"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# hierarchical indices and columns\n",
+    "index = pd.MultiIndex.from_product([[2013, 2014], [1, 2]],\n",
+    "names=['year', 'visit'])\n",
+    "columns = pd.MultiIndex.from_product([['Bob', 'Guido', 'Sue'], ['HR', 'Temp']],\n",
+    "names=['subject', 'type'])\n",
+    "# mock some data\n",
+    "data = np.round(np.random.randn(4, 6), 1)\n",
+    "data[:, ::2] *= 10\n",
+    "data += 37\n",
+    "# create the DataFrame\n",
+    "health_data = pd.DataFrame(data, index=index, columns=columns)\n",
+    "health_data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "4c90ad9e",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>type</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>year</th>\n",
+       "      <th>visit</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">2013</th>\n",
+       "      <th>1</th>\n",
+       "      <td>53.0</td>\n",
+       "      <td>38.3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>33.0</td>\n",
+       "      <td>36.1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">2014</th>\n",
+       "      <th>1</th>\n",
+       "      <td>34.0</td>\n",
+       "      <td>37.3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>36.0</td>\n",
+       "      <td>36.3</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "type          HR  Temp\n",
+       "year visit            \n",
+       "2013 1      53.0  38.3\n",
+       "     2      33.0  36.1\n",
+       "2014 1      34.0  37.3\n",
+       "     2      36.0  36.3"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "health_data['Guido']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "id": "d676b126",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "state       year\n",
+       "California  2000    33871648\n",
+       "            2010    37253956\n",
+       "New York    2000    18976457\n",
+       "            2010    19378102\n",
+       "Texas       2000    20851820\n",
+       "            2010    25145561\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 31,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Indexing and Slicing a MultiIndex\n",
+    "\n",
+    "#Multiply indexed Series\n",
+    "pop"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "id": "f6ced375",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "33871648"
+      ]
+     },
+     "execution_count": 32,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pop['California', 2000]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "id": "ed1726b6",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "year\n",
+       "2000    33871648\n",
+       "2010    37253956\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 33,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pop['California']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "id": "bcd41228",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "state       year\n",
+       "California  2000    33871648\n",
+       "            2010    37253956\n",
+       "New York    2000    18976457\n",
+       "            2010    19378102\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 34,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pop.loc['California':'New York']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "id": "9cbd4b5c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "state\n",
+       "California    33871648\n",
+       "New York      18976457\n",
+       "Texas         20851820\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 35,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pop[:, 2000]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "id": "8aa93544",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "state       year\n",
+       "California  2000    33871648\n",
+       "            2010    37253956\n",
+       "Texas       2010    25145561\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 36,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pop[pop > 22000000]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "id": "71b9e57c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "state       year\n",
+       "California  2000    33871648\n",
+       "            2010    37253956\n",
+       "Texas       2000    20851820\n",
+       "            2010    25145561\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 37,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pop[['California', 'Texas']]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "id": "d71e26b1",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr th {\n",
+       "        text-align: left;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr:last-of-type th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>subject</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Bob</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Guido</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Sue</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>type</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>year</th>\n",
+       "      <th>visit</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">2013</th>\n",
+       "      <th>1</th>\n",
+       "      <td>39.0</td>\n",
+       "      <td>36.6</td>\n",
+       "      <td>53.0</td>\n",
+       "      <td>38.3</td>\n",
+       "      <td>52.0</td>\n",
+       "      <td>37.8</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>37.0</td>\n",
+       "      <td>38.8</td>\n",
+       "      <td>33.0</td>\n",
+       "      <td>36.1</td>\n",
+       "      <td>43.0</td>\n",
+       "      <td>36.6</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">2014</th>\n",
+       "      <th>1</th>\n",
+       "      <td>42.0</td>\n",
+       "      <td>36.8</td>\n",
+       "      <td>34.0</td>\n",
+       "      <td>37.3</td>\n",
+       "      <td>56.0</td>\n",
+       "      <td>37.1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>31.0</td>\n",
+       "      <td>37.0</td>\n",
+       "      <td>36.0</td>\n",
+       "      <td>36.3</td>\n",
+       "      <td>44.0</td>\n",
+       "      <td>36.1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "subject      Bob       Guido         Sue      \n",
+       "type          HR  Temp    HR  Temp    HR  Temp\n",
+       "year visit                                    \n",
+       "2013 1      39.0  36.6  53.0  38.3  52.0  37.8\n",
+       "     2      37.0  38.8  33.0  36.1  43.0  36.6\n",
+       "2014 1      42.0  36.8  34.0  37.3  56.0  37.1\n",
+       "     2      31.0  37.0  36.0  36.3  44.0  36.1"
+      ]
+     },
+     "execution_count": 38,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Multiply indexed DataFrames\n",
+    "\n",
+    "health_data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "id": "e92d39c0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "year  visit\n",
+       "2013  1        53.0\n",
+       "      2        33.0\n",
+       "2014  1        34.0\n",
+       "      2        36.0\n",
+       "Name: (Guido, HR), dtype: float64"
+      ]
+     },
+     "execution_count": 39,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "health_data['Guido', 'HR']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "id": "767117f9",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr th {\n",
+       "        text-align: left;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr:last-of-type th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>subject</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Bob</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>type</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>year</th>\n",
+       "      <th>visit</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">2013</th>\n",
+       "      <th>1</th>\n",
+       "      <td>39.0</td>\n",
+       "      <td>36.6</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>37.0</td>\n",
+       "      <td>38.8</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "subject      Bob      \n",
+       "type          HR  Temp\n",
+       "year visit            \n",
+       "2013 1      39.0  36.6\n",
+       "     2      37.0  38.8"
+      ]
+     },
+     "execution_count": 40,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "health_data.iloc[:2, :2]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "id": "70923bee",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "year  visit\n",
+       "2013  1        39.0\n",
+       "      2        37.0\n",
+       "2014  1        42.0\n",
+       "      2        31.0\n",
+       "Name: (Bob, HR), dtype: float64"
+      ]
+     },
+     "execution_count": 41,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "health_data.loc[:, ('Bob', 'HR')]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "id": "29f075be",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr th {\n",
+       "        text-align: left;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr:last-of-type th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>subject</th>\n",
+       "      <th>Bob</th>\n",
+       "      <th>Guido</th>\n",
+       "      <th>Sue</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>type</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>HR</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>year</th>\n",
+       "      <th>visit</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>2013</th>\n",
+       "      <th>1</th>\n",
+       "      <td>39.0</td>\n",
+       "      <td>53.0</td>\n",
+       "      <td>52.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2014</th>\n",
+       "      <th>1</th>\n",
+       "      <td>42.0</td>\n",
+       "      <td>34.0</td>\n",
+       "      <td>56.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "subject      Bob Guido   Sue\n",
+       "type          HR    HR    HR\n",
+       "year visit                  \n",
+       "2013 1      39.0  53.0  52.0\n",
+       "2014 1      42.0  34.0  56.0"
+      ]
+     },
+     "execution_count": 43,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "idx = pd.IndexSlice\n",
+    "health_data.loc[idx[:, 1], idx[:, 'HR']]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "id": "318e949a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "char  int\n",
+       "a     1      0.995113\n",
+       "      2      0.480467\n",
+       "c     1      0.569503\n",
+       "      2      0.395545\n",
+       "b     1      0.231626\n",
+       "      2      0.346695\n",
+       "dtype: float64"
+      ]
+     },
+     "execution_count": 44,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Rearranging Multi-Indices\n",
+    "\n",
+    "#Sorted and unsorted indice\n",
+    "\n",
+    "index = pd.MultiIndex.from_product([['a', 'c', 'b'], [1, 2]])\n",
+    "data = pd.Series(np.random.rand(6), index=index)\n",
+    "data.index.names = ['char', 'int']\n",
+    "data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "id": "c7e1180e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.errors.UnsortedIndexError'>\n",
+      "'Key length (1) was greater than MultiIndex lexsort depth (0)'\n"
+     ]
+    }
+   ],
+   "source": [
+    "try:\n",
+    "    data['a':'b']\n",
+    "except KeyError as e:\n",
+    "    print(type(e))\n",
+    "    print(e)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "id": "4e4de512",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "char  int\n",
+       "a     1      0.995113\n",
+       "      2      0.480467\n",
+       "b     1      0.231626\n",
+       "      2      0.346695\n",
+       "c     1      0.569503\n",
+       "      2      0.395545\n",
+       "dtype: float64"
+      ]
+     },
+     "execution_count": 46,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data = data.sort_index()\n",
+    "data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "id": "9b4a2df7",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "char  int\n",
+       "a     1      0.995113\n",
+       "      2      0.480467\n",
+       "b     1      0.231626\n",
+       "      2      0.346695\n",
+       "dtype: float64"
+      ]
+     },
+     "execution_count": 47,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data['a':'b']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "id": "5cccffd4",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th>state</th>\n",
+       "      <th>California</th>\n",
+       "      <th>New York</th>\n",
+       "      <th>Texas</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>year</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>2000</th>\n",
+       "      <td>33871648</td>\n",
+       "      <td>18976457</td>\n",
+       "      <td>20851820</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2010</th>\n",
+       "      <td>37253956</td>\n",
+       "      <td>19378102</td>\n",
+       "      <td>25145561</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "state  California  New York     Texas\n",
+       "year                                 \n",
+       "2000     33871648  18976457  20851820\n",
+       "2010     37253956  19378102  25145561"
+      ]
+     },
+     "execution_count": 50,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Stacking and unstacking indices\n",
+    "\n",
+    "pop.unstack(level=0)\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "id": "46a21ff3",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th>year</th>\n",
+       "      <th>2000</th>\n",
+       "      <th>2010</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>state</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>California</th>\n",
+       "      <td>33871648</td>\n",
+       "      <td>37253956</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>New York</th>\n",
+       "      <td>18976457</td>\n",
+       "      <td>19378102</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Texas</th>\n",
+       "      <td>20851820</td>\n",
+       "      <td>25145561</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "year            2000      2010\n",
+       "state                         \n",
+       "California  33871648  37253956\n",
+       "New York    18976457  19378102\n",
+       "Texas       20851820  25145561"
+      ]
+     },
+     "execution_count": 51,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    " pop.unstack(level=1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "id": "1e9721ec",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "state       year\n",
+       "California  2000    33871648\n",
+       "            2010    37253956\n",
+       "New York    2000    18976457\n",
+       "            2010    19378102\n",
+       "Texas       2000    20851820\n",
+       "            2010    25145561\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 52,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pop.unstack().stack()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "id": "d5a8d6ba",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>state</th>\n",
+       "      <th>year</th>\n",
+       "      <th>population</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>California</td>\n",
+       "      <td>2000</td>\n",
+       "      <td>33871648</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>California</td>\n",
+       "      <td>2010</td>\n",
+       "      <td>37253956</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>New York</td>\n",
+       "      <td>2000</td>\n",
+       "      <td>18976457</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>New York</td>\n",
+       "      <td>2010</td>\n",
+       "      <td>19378102</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>Texas</td>\n",
+       "      <td>2000</td>\n",
+       "      <td>20851820</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>Texas</td>\n",
+       "      <td>2010</td>\n",
+       "      <td>25145561</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        state  year  population\n",
+       "0  California  2000    33871648\n",
+       "1  California  2010    37253956\n",
+       "2    New York  2000    18976457\n",
+       "3    New York  2010    19378102\n",
+       "4       Texas  2000    20851820\n",
+       "5       Texas  2010    25145561"
+      ]
+     },
+     "execution_count": 53,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Index setting and resetting\n",
+    "\n",
+    "pop_flat = pop.reset_index(name='population')\n",
+    "pop_flat"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "id": "2981d1e8",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th>population</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>state</th>\n",
+       "      <th>year</th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">California</th>\n",
+       "      <th>2000</th>\n",
+       "      <td>33871648</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2010</th>\n",
+       "      <td>37253956</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">New York</th>\n",
+       "      <th>2000</th>\n",
+       "      <td>18976457</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2010</th>\n",
+       "      <td>19378102</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">Texas</th>\n",
+       "      <th>2000</th>\n",
+       "      <td>20851820</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2010</th>\n",
+       "      <td>25145561</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                 population\n",
+       "state      year            \n",
+       "California 2000    33871648\n",
+       "           2010    37253956\n",
+       "New York   2000    18976457\n",
+       "           2010    19378102\n",
+       "Texas      2000    20851820\n",
+       "           2010    25145561"
+      ]
+     },
+     "execution_count": 54,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pop_flat.set_index(['state', 'year'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "id": "879eedce",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr th {\n",
+       "        text-align: left;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr:last-of-type th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>subject</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Bob</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Guido</th>\n",
+       "      <th colspan=\"2\" halign=\"left\">Sue</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>type</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "      <th>HR</th>\n",
+       "      <th>Temp</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>year</th>\n",
+       "      <th>visit</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">2013</th>\n",
+       "      <th>1</th>\n",
+       "      <td>39.0</td>\n",
+       "      <td>36.6</td>\n",
+       "      <td>53.0</td>\n",
+       "      <td>38.3</td>\n",
+       "      <td>52.0</td>\n",
+       "      <td>37.8</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>37.0</td>\n",
+       "      <td>38.8</td>\n",
+       "      <td>33.0</td>\n",
+       "      <td>36.1</td>\n",
+       "      <td>43.0</td>\n",
+       "      <td>36.6</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th rowspan=\"2\" valign=\"top\">2014</th>\n",
+       "      <th>1</th>\n",
+       "      <td>42.0</td>\n",
+       "      <td>36.8</td>\n",
+       "      <td>34.0</td>\n",
+       "      <td>37.3</td>\n",
+       "      <td>56.0</td>\n",
+       "      <td>37.1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>31.0</td>\n",
+       "      <td>37.0</td>\n",
+       "      <td>36.0</td>\n",
+       "      <td>36.3</td>\n",
+       "      <td>44.0</td>\n",
+       "      <td>36.1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "subject      Bob       Guido         Sue      \n",
+       "type          HR  Temp    HR  Temp    HR  Temp\n",
+       "year visit                                    \n",
+       "2013 1      39.0  36.6  53.0  38.3  52.0  37.8\n",
+       "     2      37.0  38.8  33.0  36.1  43.0  36.6\n",
+       "2014 1      42.0  36.8  34.0  37.3  56.0  37.1\n",
+       "     2      31.0  37.0  36.0  36.3  44.0  36.1"
+      ]
+     },
+     "execution_count": 58,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Data Aggregations on Multi-Indices\n",
+    "\n",
+    "health_data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 60,
+   "id": "003af8ed",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "subject   Bob       Guido         Sue      \n",
+      "type       HR  Temp    HR  Temp    HR  Temp\n",
+      "year                                       \n",
+      "2013     38.0  37.7  43.0  37.2  47.5  37.2\n",
+      "2014     36.5  36.9  35.0  36.8  50.0  36.6\n"
+     ]
+    }
+   ],
+   "source": [
+    "data_mean = health_data.groupby('year').mean()\n",
+    "print(data_mean)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 62,
+   "id": "7c7b2dcf",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "TypeError",
+     "evalue": "mean() got an unexpected keyword argument 'level'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mTypeError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[62], line 1\u001b[0m\n\u001b[1;32m----> 1\u001b[0m \u001b[43mdata_mean\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mmean\u001b[49m\u001b[43m(\u001b[49m\u001b[43maxis\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;241;43m1\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mlevel\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[38;5;124;43mtype\u001b[39;49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[43m)\u001b[49m\n\u001b[0;32m      2\u001b[0m \u001b[38;5;28mprint\u001b[39m(data_mean\u001b[38;5;241m.\u001b[39mmean)\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\core\\generic.py:11556\u001b[0m, in \u001b[0;36mNDFrame._add_numeric_operations.<locals>.mean\u001b[1;34m(self, axis, skipna, numeric_only, **kwargs)\u001b[0m\n\u001b[0;32m  11539\u001b[0m \u001b[38;5;129m@doc\u001b[39m(\n\u001b[0;32m  11540\u001b[0m     _num_doc,\n\u001b[0;32m  11541\u001b[0m     desc\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mReturn the mean of the values over the requested axis.\u001b[39m\u001b[38;5;124m\"\u001b[39m,\n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m  11554\u001b[0m     \u001b[38;5;241m*\u001b[39m\u001b[38;5;241m*\u001b[39mkwargs,\n\u001b[0;32m  11555\u001b[0m ):\n\u001b[1;32m> 11556\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[43mNDFrame\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mmean\u001b[49m\u001b[43m(\u001b[49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43maxis\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mskipna\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mnumeric_only\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[43mkwargs\u001b[49m\u001b[43m)\u001b[49m\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\core\\generic.py:11201\u001b[0m, in \u001b[0;36mNDFrame.mean\u001b[1;34m(self, axis, skipna, numeric_only, **kwargs)\u001b[0m\n\u001b[0;32m  11194\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21mmean\u001b[39m(\n\u001b[0;32m  11195\u001b[0m     \u001b[38;5;28mself\u001b[39m,\n\u001b[0;32m  11196\u001b[0m     axis: Axis \u001b[38;5;241m|\u001b[39m \u001b[38;5;28;01mNone\u001b[39;00m \u001b[38;5;241m=\u001b[39m \u001b[38;5;241m0\u001b[39m,\n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m  11199\u001b[0m     \u001b[38;5;241m*\u001b[39m\u001b[38;5;241m*\u001b[39mkwargs,\n\u001b[0;32m  11200\u001b[0m ) \u001b[38;5;241m-\u001b[39m\u001b[38;5;241m>\u001b[39m Series \u001b[38;5;241m|\u001b[39m \u001b[38;5;28mfloat\u001b[39m:\n\u001b[1;32m> 11201\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_stat_function\u001b[49m\u001b[43m(\u001b[49m\n\u001b[0;32m  11202\u001b[0m \u001b[43m        \u001b[49m\u001b[38;5;124;43m\"\u001b[39;49m\u001b[38;5;124;43mmean\u001b[39;49m\u001b[38;5;124;43m\"\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mnanops\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mnanmean\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43maxis\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mskipna\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mnumeric_only\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[43mkwargs\u001b[49m\n\u001b[0;32m  11203\u001b[0m \u001b[43m    \u001b[49m\u001b[43m)\u001b[49m\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\core\\generic.py:11154\u001b[0m, in \u001b[0;36mNDFrame._stat_function\u001b[1;34m(self, name, func, axis, skipna, numeric_only, **kwargs)\u001b[0m\n\u001b[0;32m  11152\u001b[0m     nv\u001b[38;5;241m.\u001b[39mvalidate_median((), kwargs)\n\u001b[0;32m  11153\u001b[0m \u001b[38;5;28;01melse\u001b[39;00m:\n\u001b[1;32m> 11154\u001b[0m     \u001b[43mnv\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mvalidate_stat_func\u001b[49m\u001b[43m(\u001b[49m\u001b[43m(\u001b[49m\u001b[43m)\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mkwargs\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mfname\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mname\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m  11156\u001b[0m validate_bool_kwarg(skipna, \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mskipna\u001b[39m\u001b[38;5;124m\"\u001b[39m, none_allowed\u001b[38;5;241m=\u001b[39m\u001b[38;5;28;01mFalse\u001b[39;00m)\n\u001b[0;32m  11158\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_reduce(\n\u001b[0;32m  11159\u001b[0m     func, name\u001b[38;5;241m=\u001b[39mname, axis\u001b[38;5;241m=\u001b[39maxis, skipna\u001b[38;5;241m=\u001b[39mskipna, numeric_only\u001b[38;5;241m=\u001b[39mnumeric_only\n\u001b[0;32m  11160\u001b[0m )\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\compat\\numpy\\function.py:80\u001b[0m, in \u001b[0;36mCompatValidator.__call__\u001b[1;34m(self, args, kwargs, fname, max_fname_arg_count, method)\u001b[0m\n\u001b[0;32m     78\u001b[0m     validate_args(fname, args, max_fname_arg_count, \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mdefaults)\n\u001b[0;32m     79\u001b[0m \u001b[38;5;28;01melif\u001b[39;00m method \u001b[38;5;241m==\u001b[39m \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mkwargs\u001b[39m\u001b[38;5;124m\"\u001b[39m:\n\u001b[1;32m---> 80\u001b[0m     \u001b[43mvalidate_kwargs\u001b[49m\u001b[43m(\u001b[49m\u001b[43mfname\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mkwargs\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mdefaults\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m     81\u001b[0m \u001b[38;5;28;01melif\u001b[39;00m method \u001b[38;5;241m==\u001b[39m \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mboth\u001b[39m\u001b[38;5;124m\"\u001b[39m:\n\u001b[0;32m     82\u001b[0m     validate_args_and_kwargs(\n\u001b[0;32m     83\u001b[0m         fname, args, kwargs, max_fname_arg_count, \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mdefaults\n\u001b[0;32m     84\u001b[0m     )\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\util\\_validators.py:162\u001b[0m, in \u001b[0;36mvalidate_kwargs\u001b[1;34m(fname, kwargs, compat_args)\u001b[0m\n\u001b[0;32m    140\u001b[0m \u001b[38;5;250m\u001b[39m\u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[0;32m    141\u001b[0m \u001b[38;5;124;03mChecks whether parameters passed to the **kwargs argument in a\u001b[39;00m\n\u001b[0;32m    142\u001b[0m \u001b[38;5;124;03mfunction `fname` are valid parameters as specified in `*compat_args`\u001b[39;00m\n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m    159\u001b[0m \u001b[38;5;124;03mmap to the default values specified in `compat_args`\u001b[39;00m\n\u001b[0;32m    160\u001b[0m \u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[0;32m    161\u001b[0m kwds \u001b[38;5;241m=\u001b[39m kwargs\u001b[38;5;241m.\u001b[39mcopy()\n\u001b[1;32m--> 162\u001b[0m \u001b[43m_check_for_invalid_keys\u001b[49m\u001b[43m(\u001b[49m\u001b[43mfname\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mkwargs\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mcompat_args\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m    163\u001b[0m _check_for_default_values(fname, kwds, compat_args)\n",
+      "File \u001b[1;32m~\\anaconda3\\envs\\myenv\\lib\\site-packages\\pandas\\util\\_validators.py:136\u001b[0m, in \u001b[0;36m_check_for_invalid_keys\u001b[1;34m(fname, kwargs, compat_args)\u001b[0m\n\u001b[0;32m    134\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m diff:\n\u001b[0;32m    135\u001b[0m     bad_arg \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mlist\u001b[39m(diff)[\u001b[38;5;241m0\u001b[39m]\n\u001b[1;32m--> 136\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mTypeError\u001b[39;00m(\u001b[38;5;124mf\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;132;01m{\u001b[39;00mfname\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;124m() got an unexpected keyword argument \u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;132;01m{\u001b[39;00mbad_arg\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m\"\u001b[39m)\n",
+      "\u001b[1;31mTypeError\u001b[0m: mean() got an unexpected keyword argument 'level'"
+     ]
+    }
+   ],
+   "source": [
+    "data_mean.mean(axis=1, level='type')\n",
+    "print(data_mean.mean)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c3df86bf",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.16"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
